@@ -10,3 +10,5 @@ function Button({label, onClick}: ButtonProps) {
     </button>
   )
 }
+
+export default Button
