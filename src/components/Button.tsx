@@ -1,14 +1,16 @@
+// Button.tsx
 interface ButtonProps {
-  label: string
-  onClick: (label: string) => void
+  label: React.ReactNode; // <- alterado de string
+  onClick: (value: string) => void;
+  className?: string;
 }
 
-function Button({label, onClick}: ButtonProps) {
-  return(
-    <button className="button" onClick={() => onClick(label)}>
+function Button({ label, onClick, className }: ButtonProps) {
+  return (
+    <button className={className} onClick={() => onClick(String(label))}>
       {label}
     </button>
-  )
+  );
 }
 
-export default Button
+export default Button;
