@@ -2,124 +2,115 @@ import { useState, useEffect } from "react";
 import Display from "./Display";
 import Keypad from "./Keypad";
 
-function Calculator() {
+export default function Calculator() {
   const [currentValue, setCurrentValue] = useState("0");
   const [previousValue, setPreviousValue] = useState<string | null>(null);
   const [operator, setOperator] = useState<string | null>(null);
   const [overwrite, setOverwrite] = useState(false);
 
-  // ─ DIGITAR NÚMEROS / DECIMAL
-  const handleClickNumber = (num: string) => {
-    if (num === "," || num === ".") {
-      if (currentValue.includes(".")) return;
-      num = ".";
+  useEffect(() => {
+    const bg = localStorage.getItem("selectedBackground");
+
+    if (bg) {
+      document.body.style.backgroundImage = `url(${bg})`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+      document.body.style.backgroundRepeat = "no-repeat";
+    } else {
+      document.body.style.background = "#a3e3ff";
+      document.body.style.backgroundImage = "none";
     }
 
+    return () => {
+      document.body.style.background = "#a3e3ff";
+      document.body.style.backgroundImage = "none";
+    };
+  }, []);
+
+  // Lógica da calculadora abaixo
+
+  function handleClickNumber(n: string) {
     if (overwrite) {
-      setCurrentValue(num);
+      setCurrentValue(n);
       setOverwrite(false);
       return;
     }
 
-    setCurrentValue((prev) => (prev === "0" ? num : prev + num));
-  };
+    setCurrentValue((old) => (old === "0" ? n : old + n));
+  }
 
-  // ─ DEFINIR OPERADOR
-  const handleOperatorClick = (op: string) => {
-    if (operator && !overwrite) {
-      const result = calculate();
-      setCurrentValue(result);
-      setPreviousValue(result);
-    } else {
-      setPreviousValue(currentValue);
+  function handleOperatorClick(op: string) {
+    if (previousValue !== null) {
+      handleEqualsClick();
+      setOperator(op);
+      return;
     }
+
     setOperator(op);
+    setPreviousValue(currentValue);
     setOverwrite(true);
-  };
+  }
 
-  // ─ CALCULAR RESULTADO
-  const calculate = (): string => {
-    if (!operator || previousValue === null) return currentValue;
+  function handleEqualsClick() {
+    if (!operator || previousValue === null) return;
 
-    const prev = parseFloat(previousValue);
-    const curr = parseFloat(currentValue);
+    const a = parseFloat(previousValue);
+    const b = parseFloat(currentValue);
     let result = 0;
 
     switch (operator) {
-      case "+": result = prev + curr; break;
-      case "-": result = prev - curr; break;
-      case "*": result = prev * curr; break;
-      case "/": result = curr !== 0 ? prev / curr : NaN; break;
-      default: return currentValue;
+      case "+":
+        result = a + b;
+        break;
+      case "-":
+        result = a - b;
+        break;
+      case "*":
+        result = a * b;
+        break;
+      case "/":
+        result = b !== 0 ? a / b : 0;
+        break;
     }
 
-    return String(result);
-  };
-
-  // ─ BOTÃO "="
-  const handleEqualsClick = () => {
-    if (!operator || previousValue === null) return;
-
-    const result = calculate();
-    setCurrentValue(result);
+    setCurrentValue(String(result));
     setPreviousValue(null);
     setOperator(null);
     setOverwrite(true);
-  };
+  }
 
-  // ─ LIMPAR
-  const handleClear = () => {
+  function handleClear() {
     setCurrentValue("0");
     setPreviousValue(null);
     setOperator(null);
-    setOverwrite(false);
-  };
+  }
 
-  // ─ BACKSPACE
-  const handleBackspace = () => {
-    setCurrentValue((prev) =>
-      prev.length > 1 ? prev.slice(0, -1) : "0"
+  function handleBackspace() {
+    setCurrentValue((v) =>
+      v.length <= 1 ? "0" : v.slice(0, v.length - 1)
     );
-  };
+  }
 
-  // ─ SUPORTE AO TECLADO / NUMPAD
-  useEffect(() => {
-    function handleKeyPress(e: KeyboardEvent) {
-      const key = e.key;
-
-      if (!isNaN(Number(key))) handleClickNumber(key);
-      else if (key === "." || key === ",") handleClickNumber(key);
-      else if (["+", "-", "*", "/"].includes(key)) handleOperatorClick(key);
-      else if (key === "Enter" || key === "=") { e.preventDefault(); handleEqualsClick(); }
-      else if (key.toLowerCase() === "c") handleClear();
-      else if (key === "Backspace") handleBackspace();
+  function displayValue() {
+    if (previousValue && operator) {
+      return `${previousValue} ${operator} ${currentValue}`;
     }
-
-    window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [currentValue, previousValue, operator]);
-
-  // ─ DISPLAY
-  const displayValue = () => {
-    let text = previousValue ? previousValue : "";
-    if (operator) text += ` ${operator} `;
-    text += currentValue;
-    return text.replace(".", ",");
-  };
+    return currentValue;
+  }
 
   return (
-    <div className="calculator">
-      <Display value={displayValue()} />
+    <div className="calculator-container">
+      <div className="calculator">
+        <Display value={displayValue()} />
 
-      <Keypad
-        onNumberClick={handleClickNumber}
-        onOperatorClick={handleOperatorClick}
-        onEqualsClick={handleEqualsClick}
-        onClear={handleClear}
-        onBackspace={handleBackspace}
-      />
+        <Keypad
+          onNumberClick={handleClickNumber}
+          onOperatorClick={handleOperatorClick}
+          onEqualsClick={handleEqualsClick}
+          onClear={handleClear}
+          onBackspace={handleBackspace}
+        />
+      </div>
     </div>
   );
 }
-
-export default Calculator;

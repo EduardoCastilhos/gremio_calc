@@ -9,7 +9,7 @@ interface KeypadProps {
   onBackspace: () => void;
 }
 
-function Keypad({
+export default function Keypad({
   onNumberClick,
   onOperatorClick,
   onEqualsClick,
@@ -49,5 +49,3 @@ function Keypad({
     </div>
   );
 }
-
-export default Keypad;

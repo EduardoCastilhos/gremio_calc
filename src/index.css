@@ -10,10 +10,13 @@ body {
 
 .calculator {
   width: 260px;
-  background: #3d8bff;
+  background: var(--calc-bg, #3d8bff);
   padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .display {
