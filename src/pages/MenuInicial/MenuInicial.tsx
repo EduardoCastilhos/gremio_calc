@@ -1,19 +1,34 @@
 import {useNavigate} from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './menuInicial.css'
 
-export default function(){
+export default function MenuInicial() {
     const navigate = useNavigate()
 
-    const [muted, setMuted] = useState(false)
+  // Estado de mute
+    const [muted, setMuted] = useState<boolean>(() => {
+        return localStorage.getItem('muted') === 'true'
+    })
 
-    function toggleMute(){
-        setMuted((prev) => !prev)
+  // Função para alternar o mute
+    function toggleMute() {
+        setMuted((prev) => {
+            const newVal = !prev
+            localStorage.setItem('muted', String(newVal))
+            return newVal
+            }
+        )
     }
+
+    useEffect(() => {
+        document.querySelectorAll('audio').forEach((a) => {
+            (a as HTMLAudioElement).muted = muted
+        })
+    }, [muted])
 
     return (
         <div className='menu-container'>
-            <img className='logo' src='/src/assets/logo.png' alt='logo'/>
+            <img className='logo' src='/src/assets/img/logo.png' alt='logo'/>
             <h1> CALCULADORA DO GRÊMIO </h1>
             <div className='menu-buttons'>
                 <button onClick={() => navigate('/calc')}>CALCULAR</button>

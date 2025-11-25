@@ -1,4 +1,4 @@
-import Calculator from './components/Calculator'
+import Calculator from './pages/CalculatorPage/Calculator'
 import MenuInicial from './pages/MenuInicial/MenuInicial'
 import { Routes, Route } from 'react-router-dom'
 import Backgrounds from './pages/BackgroundsPage/Backgrounds'

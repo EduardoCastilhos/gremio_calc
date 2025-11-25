@@ -1,0 +1,40 @@
+.toasty {
+  position: fixed;
+  right: -200px;
+  bottom: 40px; 
+  width: 200px;
+  z-index: 9999;
+  animation: toasty-slide 0.4s ease-out forwards;
+}
+
+@keyframes toasty-slide {
+  from {
+    right: -200px;
+    opacity: 0;
+  }
+  to {
+    right: 20px;
+    opacity: 1;
+  }
+}
+
+.goal-image {
+  position: fixed;
+  bottom: -150px; 
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  z-index: 9999;
+  animation: goal-rise 0.01s ease-out forwards;
+}
+
+@keyframes goal-rise {
+  from {
+    bottom: -150px;
+    opacity: 0;
+  }
+  to {
+    bottom: 40px;
+    opacity: 1;
+  }
+}

@@ -4,7 +4,7 @@ import { useState } from 'react'
 export default function Backgrounds(){
 
     const [selected, setSelected] = useState(
-        localStorage.getItem("selectedBackground") || ""
+        localStorage.getItem('selectedBackground') || ''
     )
 
     const backgrounds = [
@@ -18,13 +18,13 @@ export default function Backgrounds(){
     function handleSelect(bg: string){
 
         if(selected === bg){
-            setSelected("")
-            localStorage.removeItem("selectedBackground")
+            setSelected('')
+            localStorage.removeItem('selectedBackground')
             return
         }
 
         setSelected(bg)
-        localStorage.setItem("selectedBackground", bg)
+        localStorage.setItem('selectedBackground', bg)
     }
 
     return(
@@ -34,7 +34,7 @@ export default function Backgrounds(){
                 {backgrounds.map((b)=>(
                     <div 
                         key={b.id} 
-                        className={`bg-item ${selected === b.img ? "selected" : ""}`}
+                        className={`bg-item ${selected === b.img ? "selected" : ''}`}
                     >
                         <img 
                             src={b.img} 
